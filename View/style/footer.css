@@ -1,0 +1,14 @@
+/* Footer */
+footer {
+    position: relative;
+    height: 50px;
+    margin-top: 50px;
+    padding: 0 50px;
+    padding-top: 20px;
+    text-align: center;
+    box-shadow: 0 -18px 10px -19px gray;
+}
+
+footer>p {
+    margin-top: 5px;
+}
