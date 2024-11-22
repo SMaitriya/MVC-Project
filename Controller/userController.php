@@ -8,30 +8,37 @@ class userController {
  $this->userManager = new UserManager($db1);
  $this->db = $db1 ;
  }
+
+ public function home() {
+    $page = 'home';  // Définit la page d'accueil
+    require('./View/main.php');  // Charge la vue correspondante
+}
+
+
+
  public function login() {
  $page = 'login';
  require('./View/main.php');
  }
  public function doLogin() {
- $this->user = new User();
- // Cette action teste l'existence d'un utilisateur de email $_POST['email'] et de password $_POST['password']
- // Le user extrait par le UserManager est renvoyé dans $result
- // A vous d'écrire les 3 lignes correspondantes 
- 
- $result =  ;
+    $this->user = new User();
+    
+    // On vérifie les identifiants de l'utilisateur
+    $result = $this->userManager->findByEmailAndPassword($_POST['email'], $_POST['password']);
+    
+    if ($result) {
+        $info = "Connexion réussie";
+        $_SESSION['user'] = $result; // On stocke l'utilisateur dans la session
+        $page = 'home';  // On redirige vers la page d'accueil
+    } else {
+        $info = "Identifiants incorrects.";
+    }
+    
+    require('./View/main.php');
+}
 
- if ( $result ) :
- $info = "Connexion reussie";
- $_SESSION['user'] = $result;
- $page = 'home';
- else :
- $info = "Identifiants incorrects.";
- endif;
- require('./View/main.php');
- }
 
- public
-function doCreate()
+public function doCreate()
 {
  if (
  isset($_POST['email']) &&
@@ -46,12 +53,13 @@ function doCreate()
  if (!$alreadyExist) {
  $newUser = new User($_POST);
  $this->userManager->create($newUser);
- $page = 'login';
+ $page = 'CeateAccount';
  } else {
  $error = "ERROR : This email (" . $_POST['email'] . ") is used by another user";
- $page = 'create';
+ $page = 'CreateAccount';
  }
  }
- require('./View/default.php');
+ $page = 'CreateAccount';
+ require('./View/main.php');
 }
 }

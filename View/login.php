@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="style/general.css" rel="stylesheet" type="text/css">
+    <link href="View/style/general.css" rel="stylesheet" type="text/css">
 
     <title>Document</title>
 </head>
@@ -21,7 +21,7 @@
     </form>
     <p></p>
 
-    <div class="create-account">You don't have an account ? <a href='index.php?ctrl=user&action=create'>Create one</a> !</div>
+    <div class="create-account">You don't have an account ? <a href='index.php?ctrl=user&action=doCreate'>Create one</a> !</div>
 </div></section>
 
     

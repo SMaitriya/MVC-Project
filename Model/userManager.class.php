@@ -1,5 +1,5 @@
 <?php
-include 'connexion.php';
+require_once('./Model/Connection.class.php');
 
 class UserManager
 {
@@ -97,4 +97,23 @@ class UserManager
         $req->bindValue(':id', $user->getId(), PDO::PARAM_INT); // Correction de l'erreur
         $req->execute();
     }
+
+    public function findByEmailAndPassword(string $email, string $password): ?User
+{
+    // Hachage du mot de passe pour la comparaison
+    $hashedPassword = hash("sha256", $password);
+    
+    $req = $this->db->prepare("SELECT * FROM {$this->table} WHERE email = :email AND password = :password");
+    $req->bindValue(':email', $email);
+    $req->bindValue(':password', $hashedPassword);
+    $req->execute();
+
+    $donnees = $req->fetch(PDO::FETCH_ASSOC);
+    if ($donnees) {
+        $user = new User();
+        $user->hydrate($donnees); // Utilisation de la méthode hydrate pour peupler l'objet User
+        return $user;
+    }
+    return null; // Retourne null si aucun utilisateur trouvé
+}
 }
