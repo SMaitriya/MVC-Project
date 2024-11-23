@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,11 +22,17 @@
    
 
     <div id="account_bar">
-   
+
+    
+    <?php
+
+
+?>
+
+
+
 
         <div class="connection center">
-                <!-- Utilisation du getter pour obtenir le prénom de l'utilisateur -->
-                <p>Bonjour, <?php echo htmlspecialchars($_SESSION['user']->getFirstName()); ?>!</p>
             
             <a href="./index.php?ctrl=user&action=logout" class="no-deco" title="Log out">
             <svg class="svg-inline--fa fa-user fa-w-16" aria-hidden="true" data-fa-processed="" data-prefix="fas" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

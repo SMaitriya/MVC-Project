@@ -74,8 +74,11 @@ class UserManager
                 postalCode = :postalCode, 
                 city = :city 
                 WHERE id = :id");
-
-            $req->bindValue(':password', hash("sha256", $user->getPassword()));
+    
+            // Utilisation de password_hash pour un mot de passe sécurisé
+            $hashedPassword = password_hash($user->getPassword(), PASSWORD_DEFAULT);
+            
+            $req->bindValue(':password', $hashedPassword);
             $req->bindValue(':email', $user->getEmail());
             $req->bindValue(':firstName', $user->getFirstName());
             $req->bindValue(':lastName', $user->getLastName());
@@ -83,12 +86,13 @@ class UserManager
             $req->bindValue(':postalCode', $user->getPostalCode());
             $req->bindValue(':city', $user->getCity());
             $req->bindValue(':id', $user->getId(), PDO::PARAM_INT);
-
+    
             $req->execute();
         } catch (PDOException $e) {
-            echo "Erreur lors de la mise à jour: " . $e->getMessage();
+            echo "Erreur lors de la mise à jour de l'utilisateur : " . $e->getMessage();
         }
     }
+    
 
     // Méthode pour supprimer un utilisateur
     public function delete(User $user): void
@@ -120,7 +124,7 @@ class UserManager
 
 public function findByEmail(string $email): ?User
 {
-    // Prépare la requête pour récupérer l'utilisateur par email
+    //la requête pour récupérer l'utilisateur par email
     $req = $this->db->prepare("SELECT * FROM {$this->table} WHERE email = :email");
     $req->bindValue(':email', $email);
     $req->execute();
@@ -135,6 +139,15 @@ public function findByEmail(string $email): ?User
         return $user;
     }
     return null;  // Si l'email n'existe pas dans la base de données
+}
+
+
+
+public function getAllUsers() {
+    $query = "SELECT email, password, firstName, lastName, admin FROM users";
+    $stmt = $this->db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 }

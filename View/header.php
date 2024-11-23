@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="View/style/header.css" rel="stylesheet" type="text/css">
+
+
     <title>Header</title>
 </head>
 <body>
+    
 
 <header>
     <div id="info-bar">

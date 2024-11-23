@@ -1,6 +1,7 @@
 <?php
-session_start();
+
 require_once('./Model/Connection.class.php');
+session_start();
 $pdoBuilder = new Connection();
 $db = $pdoBuilder->getDb();
 

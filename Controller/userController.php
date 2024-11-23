@@ -22,27 +22,21 @@ class userController {
  }
 
  public function doLogin() {
+
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Cherche l'utilisateur avec les identifiants fournis
     $result = $this->userManager->findByEmailAndPassword($email, $password);
 
     if ($result) {
-        // Si l'utilisateur est trouvé, l'objet User est retourné et peut être utilisé
-        $_SESSION['user'] = $result;  // On enregistre l'objet User dans la session
-        $info = "Connexion réussie";
+        $_SESSION['user'] = $result;  
         $page = 'home';
     } else {
-        // Si l'utilisateur n'est pas trouvé, afficher un message d'erreur
         $info = "Identifiants incorrects.";
     }
 
-    // Affiche la vue principale avec le message d'info
     require('./View/main.php');
 }
-
-
 
 
 
@@ -81,33 +75,31 @@ public function doCreate()
 
 
 public function logout() {
-    // Démarre la session si ce n'est pas déjà fait
     session_start();
     
-    // Supprimer toutes les variables de session
     session_unset();
 
     // Détruire la session
     session_destroy();
 
-    // Rediriger l'utilisateur vers la page d'accueil ou la page de connexion
     header('Location: index.php?ctrl=user&action=login');
     exit();
 }
 
-function userList() {
-    // Vérifier si l'utilisateur est connecté
+public function userList() {
     if (isset($_SESSION['user'])) {
-        // L'utilisateur est connecté, afficher la liste des utilisateurs
-        $page = 'userList';  // Définir la page comme 'userList'
-    } else {
-        // L'utilisateur n'est pas connecté, afficher la page unauthorized
-        $page = 'unauthorized';  // Définir la page comme 'unauthorized'
-    }
+        $users = $this->userManager->getAllUsers();
 
-    // Inclure la vue principale avec la variable $page
-    require('./View/main.php');
+        $page = 'userList'; 
+        require('./View/main.php'); 
+    } else {
+       
+        $page = 'unauthorized';
+        require('./View/main.php');
+    }
 }
+
+
 
 
 
