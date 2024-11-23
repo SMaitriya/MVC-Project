@@ -20,6 +20,11 @@
         </p>
     </form>
     <p></p>
+    <?php if (isset($info)): ?>
+    <div class="alert">
+        <?php echo $info; ?>
+    </div>
+<?php endif; ?>
 
     <div class="create-account">You don't have an account ? <a href='index.php?ctrl=user&action=doCreate'>Create one</a> !</div>
 </div></section>

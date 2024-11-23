@@ -20,46 +20,98 @@ class userController {
  $page = 'login';
  require('./View/main.php');
  }
+
  public function doLogin() {
-    $this->user = new User();
-    
-    // On vérifie les identifiants de l'utilisateur
-    $result = $this->userManager->findByEmailAndPassword($_POST['email'], $_POST['password']);
-    
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Cherche l'utilisateur avec les identifiants fournis
+    $result = $this->userManager->findByEmailAndPassword($email, $password);
+
     if ($result) {
+        // Si l'utilisateur est trouvé, l'objet User est retourné et peut être utilisé
+        $_SESSION['user'] = $result;  // On enregistre l'objet User dans la session
         $info = "Connexion réussie";
-        $_SESSION['user'] = $result; // On stocke l'utilisateur dans la session
-        $page = 'home';  // On redirige vers la page d'accueil
+        $page = 'home';
     } else {
+        // Si l'utilisateur n'est pas trouvé, afficher un message d'erreur
         $info = "Identifiants incorrects.";
     }
-    
+
+    // Affiche la vue principale avec le message d'info
     require('./View/main.php');
 }
 
 
+
+
+
 public function doCreate()
 {
- if (
- isset($_POST['email']) &&
- isset($_POST['password']) &&
- isset($_POST['lastName']) &&
- isset($_POST['firstName']) &&
- isset($_POST['address']) &&
- isset($_POST['postalCode']) &&
- isset($_POST['city'])
- ) {
- $alreadyExist = $this->userManager->findByEmail($_POST['email']);
- if (!$alreadyExist) {
- $newUser = new User($_POST);
- $this->userManager->create($newUser);
- $page = 'CeateAccount';
- } else {
- $error = "ERROR : This email (" . $_POST['email'] . ") is used by another user";
- $page = 'CreateAccount';
- }
- }
- $page = 'CreateAccount';
- require('./View/main.php');
+    if (
+        isset($_POST['email']) &&
+        isset($_POST['password']) &&
+        isset($_POST['lastName']) &&
+        isset($_POST['firstName']) &&
+        isset($_POST['address']) &&
+        isset($_POST['postalCode']) &&
+        isset($_POST['city'])
+    ) {
+        $alreadyExist = $this->userManager->findByEmail($_POST['email']);
+        
+        if (!$alreadyExist) {
+            $newUser = new User($_POST);
+            $this->userManager->create($newUser);
+            
+            $page = 'Login'; 
+            header('Location: index.php?ctrl=user&action=login');
+            exit(); 
+        } else {
+            // Si l'email est déjà utilisé, afficher la page d'erreur
+            $page = 'Error';
+        }
+    } else {
+        $page = 'createAccount';
+    }
+
+    // Afficher la vue principale avec la page à afficher
+    require('./View/main.php');
 }
+
+
+
+public function logout() {
+    // Démarre la session si ce n'est pas déjà fait
+    session_start();
+    
+    // Supprimer toutes les variables de session
+    session_unset();
+
+    // Détruire la session
+    session_destroy();
+
+    // Rediriger l'utilisateur vers la page d'accueil ou la page de connexion
+    header('Location: index.php?ctrl=user&action=login');
+    exit();
 }
+
+function userList() {
+    // Vérifier si l'utilisateur est connecté
+    if (isset($_SESSION['user'])) {
+        // L'utilisateur est connecté, afficher la liste des utilisateurs
+        $page = 'userList';  // Définir la page comme 'userList'
+    } else {
+        // L'utilisateur n'est pas connecté, afficher la page unauthorized
+        $page = 'unauthorized';  // Définir la page comme 'unauthorized'
+    }
+
+    // Inclure la vue principale avec la variable $page
+    require('./View/main.php');
+}
+
+
+
+
+}
+
+

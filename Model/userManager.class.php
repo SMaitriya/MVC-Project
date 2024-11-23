@@ -110,10 +110,31 @@ class UserManager
 
     $donnees = $req->fetch(PDO::FETCH_ASSOC);
     if ($donnees) {
-        $user = new User();
+        $user = new User($donnees);
         $user->hydrate($donnees); // Utilisation de la méthode hydrate pour peupler l'objet User
         return $user;
     }
     return null; // Retourne null si aucun utilisateur trouvé
 }
+
+
+public function findByEmail(string $email): ?User
+{
+    // Prépare la requête pour récupérer l'utilisateur par email
+    $req = $this->db->prepare("SELECT * FROM {$this->table} WHERE email = :email");
+    $req->bindValue(':email', $email);
+    $req->execute();
+
+    // Récupère les données de l'utilisateur
+    $donnees = $req->fetch(PDO::FETCH_ASSOC);
+    
+    // Si l'utilisateur est trouvé
+    if ($donnees) {
+        // On passe les données au constructeur de User
+        $user = new User($donnees);  // Le constructeur prendra en charge l'hydratation des données
+        return $user;
+    }
+    return null;  // Si l'email n'existe pas dans la base de données
+}
+
 }

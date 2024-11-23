@@ -1,14 +1,29 @@
 <?php
 class User {
-    private ?int $id = null; // Nullable, initialisé à null
-    private string $email;
-    private string $password;
-    private string $firstName;
-    private string $lastName;
-    private string $address;
-    private string $postalCode;
-    private string $city;
-    private bool $admin;
+    private ?int $id = NULL;
+    private ?string $password;
+    private ?string $email;
+    private ?string $firstName;
+    private ?string $lastName;
+    private ?string $address;
+    private ?string $postalCode;
+    private ?string $city;
+    private ?bool $admin = false;  
+
+
+    public function __construct(array $data) {
+        $this->email = $data['email'] ?? null;
+        $this->password = $data['password'] ?? null;
+        $this->firstName = $data['firstName'] ?? null;
+        $this->lastName = $data['lastName'] ?? null;
+        $this->address = $data['address'] ?? null;
+        $this->postalCode = $data['postalCode'] ?? null;
+        $this->city = $data['city'] ?? null;
+        $this->admin = $data['admin'] ?? false;  
+
+    }
+
+
 
     // Getters
     public function getId(){
@@ -97,11 +112,15 @@ class User {
     {
         foreach ($data as $key => $donnee) 
         {
-            $method = 'set'.$key;
+            // Convertir la clé de $data en camelCase pour correspondre au nom des setters
+            $method = 'set' . ucfirst(str_replace('_', '', ucwords($key, '_')));
+    
+            // Si la méthode setter existe, l'appeler
             if (method_exists($this, $method))
             {
                 $this->$method($donnee);
             }
         }
     }
+    
 }
